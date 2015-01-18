@@ -429,6 +429,7 @@
                 <action android:name="org.omnirom.DaylightHeaderPack" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+        </activity>
 
         <activity
             android:name=".cm.LockscreenShortcutsActivity"
