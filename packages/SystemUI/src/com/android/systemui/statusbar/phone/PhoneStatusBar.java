@@ -116,6 +116,7 @@ import com.android.internal.utils.du.ActionHandler;
 import com.android.internal.utils.du.DUActionUtils;
 import com.android.internal.utils.du.DUPackageMonitor;
 import com.android.internal.utils.du.DUSystemReceiver;
+import com.android.internal.util.cm.WeatherControllerImpl;
 import com.android.keyguard.KeyguardHostView.OnDismissAction;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
