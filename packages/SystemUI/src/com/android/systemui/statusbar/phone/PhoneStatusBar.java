@@ -1930,11 +1930,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         }
     }
 
-    public void setClockAndDateStatus(int width, int mode, boolean enabled) {
-        mClockLocation = mode;
-        mShowClock = enabled;
-	}
-
     private int adjustDisableFlags(int state) {
         if (!mLaunchTransitionFadingAway && !mKeyguardFadingAway
                 && (mExpandedVisible || mBouncerShowing || mWaitingForKeyguardExit)) {
