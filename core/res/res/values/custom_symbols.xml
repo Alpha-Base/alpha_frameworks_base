@@ -117,4 +117,7 @@
 
   <!-- Non-themeable packages -->
   <java-symbol type="array" name="non_themeable_packages" />
+
+  <!-- Default name of the custom carrier label -->
+  <java-symbol type="string" name="default_custom_label" />
 </resources>

@@ -502,6 +502,10 @@ public class StatusBarIconController implements Tunable {
         return ret;
     }
 
+    public int getCurrentVisibleNotificationIcons() {
+        return mNotificationIcons.getChildCount();
+    }
+
     public void refreshAllStatusBarIcons() {
         refreshAllIconsForLayout(mStatusIcons);
         refreshAllIconsForLayout(mStatusIconsKeyguard);
