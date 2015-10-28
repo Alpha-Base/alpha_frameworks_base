@@ -17,10 +17,10 @@
 
 package com.android.systemui.statusbar.phone;
 
+import android.app.ActivityManager;
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.AnimatorListenerAdapter;
-import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.ContentResolver;
@@ -84,14 +84,10 @@ import java.text.NumberFormat;
 /**
  * The view to manage the header area in the expanded status bar.
  */
-public class StatusBarHeaderView extends RelativeLayout implements View.OnClickListener,
-        StatusBarHeaderMachine.IStatusBarHeaderMachineObserver,
-        View.OnLongClickListener, 
-        NextAlarmController.NextAlarmChangeCallback,
-        EmergencyListener {
+
+public class StatusBarHeaderView extends RelativeLayout implements View.OnClickListener, NextAlarmController.NextAlarmChangeCallback, EmergencyListener, StatusBarHeaderMachine.IStatusBarHeaderMachineObserver, View.OnLongClickListener {
 
     static final String TAG = "StatusBarHeaderView";
-
     private boolean mExpanded;
     private boolean mListening;
 
@@ -159,6 +155,7 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
     private boolean mShowingDetail;
     private boolean mDetailTransitioning;
 
+    private SettingsObserver mSettingsObserver;
     private ImageView mBackgroundImage;
     private Drawable mCurrentBackground;
     private float mLastHeight;
@@ -180,7 +177,7 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
         }
     }
 
-    private SettingsObserver mSettingsObserver;
+    private int mShowBatteryText;
     private boolean mShowBatteryTextExpanded;
 
     public StatusBarHeaderView(Context context, AttributeSet attrs) {
@@ -219,6 +216,7 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
         mAlarmStatus = (TextView) findViewById(R.id.alarm_status);
         mAlarmStatus.setOnClickListener(this);
         mSignalCluster = findViewById(R.id.signal_cluster);
+        mSettingsObserver = new SettingsObserver(new Handler());
         mSystemIcons = (LinearLayout) findViewById(R.id.system_icons);
         mBackgroundImage = (ImageView) findViewById(R.id.background_image);
         mWeatherImage = (CurrentWeatherView) findViewById(R.id.current_weather_view);
@@ -970,6 +968,58 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
         }
     };
 
+    class SettingsObserver extends ContentObserver {
+        SettingsObserver(Handler handler) {
+            super(handler);
+        }
+
+        void observe() {
+            ContentResolver resolver = mContext.getContentResolver();
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.STATUS_BAR_BATTERY_STYLE), false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.STATUS_BAR_SHOW_BATTERY_PERCENT), false, this,
+                    UserHandle.USER_ALL);
+            update();
+        }
+
+        void unobserve() {
+            ContentResolver resolver = mContext.getContentResolver();
+            resolver.unregisterContentObserver(this);
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            update();
+        }
+
+        @Override
+        public void onChange(boolean selfChange, Uri uri) {
+            update();
+        }
+
+        public void update() {
+            ContentResolver resolver = mContext.getContentResolver();
+            int currentUserId = ActivityManager.getCurrentUser();
+            int batteryStyle = Settings.System.getIntForUser(resolver,
+                    Settings.System.STATUS_BAR_BATTERY_STYLE, 0, currentUserId);
+            boolean showExpandedBatteryPercentage = Settings.System.getIntForUser(resolver,
+                    Settings.System.STATUS_BAR_SHOW_BATTERY_PERCENT, 0, currentUserId) == 0;
+
+            switch (batteryStyle) {
+                case 4: //BATTERY_METER_GONE
+                case 6: //BATTERY_METER_TEXT
+                    showExpandedBatteryPercentage = false;
+                    break;
+                default:
+                    break;
+            }
+
+            mShowBatteryTextExpanded = showExpandedBatteryPercentage;
+            updateVisibilities();
+        }
+    }
+
     private void doUpdateStatusBarCustomHeader(final Drawable next, final boolean force) {
         if (next != null) {
             if (next != mCurrentBackground) {
@@ -1053,7 +1103,7 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
             mAlarmStatus.setVisibility(mExpanded && mAlarmShowing ? View.VISIBLE : View.INVISIBLE);
             updateDetailedHiddenViews(false);
             updateEverything();
-         }
+        }
     }
 
     private void updateDetailedHiddenViews(boolean hide) {
@@ -1113,6 +1163,7 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
         final boolean value = Settings.System.getIntForUser(
                 mContext.getContentResolver(), Settings.System.STATUS_BAR_HEADER_WEATHER,
                 0, UserHandle.USER_CURRENT) == 1;
+
         if (mWeatherClient.isOmniJawsEnabled()) {
             mWeatherClient.settingsChanged();
         }
@@ -1202,57 +1253,5 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
         mAlarmStatus.setShadowLayer(0, 0, 0, Color.BLACK);
         mWeatherImage.disableTextShadow();
     }
-
-    class SettingsObserver extends ContentObserver {
-        SettingsObserver(Handler handler) {
-            super(handler);
-        }
-
-        void observe() {
-            ContentResolver resolver = mContext.getContentResolver();
-            resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.STATUS_BAR_BATTERY_STYLE), false, this, UserHandle.USER_ALL);
-            resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.STATUS_BAR_SHOW_BATTERY_PERCENT), false, this,
-                    UserHandle.USER_ALL);
-            update();
-        }
-
-        void unobserve() {
-            ContentResolver resolver = mContext.getContentResolver();
-            resolver.unregisterContentObserver(this);
-        }
-
-        @Override
-        public void onChange(boolean selfChange) {
-            update();
-        }
-
-        @Override
-        public void onChange(boolean selfChange, Uri uri) {
-            update();
-        }
-
-        public void update() {
-            ContentResolver resolver = mContext.getContentResolver();
-            int currentUserId = ActivityManager.getCurrentUser();
-            int batteryStyle = Settings.System.getIntForUser(resolver,
-                    Settings.System.STATUS_BAR_BATTERY_STYLE, 0, currentUserId);
-            boolean showExpandedBatteryPercentage = Settings.System.getIntForUser(resolver,
-                    Settings.System.STATUS_BAR_SHOW_BATTERY_PERCENT, 0, currentUserId) == 0;
-
-            switch (batteryStyle) {
-                case 4: //BATTERY_METER_GONE
-                case 6: //BATTERY_METER_TEXT
-                    showExpandedBatteryPercentage = false;
-                    break;
-                default:
-                    break;
-            }
-
-            mShowBatteryTextExpanded = showExpandedBatteryPercentage;
-            updateVisibilities();
-            requestCaptureValues();
-        }
-    }
 }
+
