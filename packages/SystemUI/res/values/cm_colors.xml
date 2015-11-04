@@ -86,4 +86,7 @@
     <color name="zen_ic_close_tint_color">@android:color/white</color>
     <color name="header_debug_info_text_color">#00A040</color>
 
+    <!-- QS Toast Text color -->
+    <color name="quick_settings_toast_color">#ffbe1b</color>
+
 </resources>
