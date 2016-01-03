@@ -3427,7 +3427,7 @@ public final class Settings {
         public static final String LOCK_SCREEN_WEATHER_COLORIZE_ALL_ICONS = "lock_screen_weather_colorize_all_icons";
 
         /**
-         * Color of the weather text on the lock screen
+         * Whether national data roaming should be used.
          * @hide
          */
         public static final String LOCK_SCREEN_WEATHER_TEXT_COLOR = "lock_screen_weather_text_color";
