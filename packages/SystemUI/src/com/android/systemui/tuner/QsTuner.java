@@ -201,6 +201,7 @@ public class QsTuner extends Fragment implements Callback {
         else if (spec.equals("cast")) return R.string.quick_settings_cast_title;
         else if (spec.equals("hotspot")) return R.string.quick_settings_hotspot_label;
         else if (spec.equals("themes")) return R.string.quick_settings_themes;
+        else if (spec.equals("navigation_bar")) return R.string.quick_settings_smartbar;
         return 0;
     }
 
@@ -445,6 +446,7 @@ public class QsTuner extends Fragment implements Callback {
             else if (mSpec.equals("cast")) return R.drawable.ic_qs_cast_on;
             else if (mSpec.equals("hotspot")) return R.drawable.ic_hotspot_enable;
             else if (mSpec.equals("themes")) return R.drawable.ic_qs_themes_on;
+            else if (mSpec.equals("navigation_bar")) return R.drawable.ic_qs_smartbar;
             return R.drawable.android;
         }
 
