@@ -3411,6 +3411,12 @@ public final class Settings {
         public static final String LOCK_SCREEN_SHOW_WEATHER_TIMESTAMP = "lock_screen_show_weather_timestamp";
 
         /**
+         * Whether to display dashboard tiles in a double line layout
+         * @hide
+         */
+        public static final String DASHBOARD_TILEVIEW_DOUBLE_LINES = "dashboard_tileview_double_lines";
+
+        /**
          * Weather condition icon on the lock screen
          * 0: monochrome
          * 1: colored
