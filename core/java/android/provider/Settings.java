@@ -3393,6 +3393,12 @@ public final class Settings {
         };
 
         /**
+         * Change the number of columns displayed in the Settings dashboard
+         * @hide
+         */
+        public static final String DASHBOARD_COLUMNS = "dashboard_columns";
+
+        /**
          * Whether to show the weather info on the lock screen
          * @hide
          */
