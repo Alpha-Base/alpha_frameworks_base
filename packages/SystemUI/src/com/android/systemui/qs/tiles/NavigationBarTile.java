@@ -32,6 +32,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.android.internal.logging.MetricsLogger;
+import com.android.internal.utils.du.DUActionUtils;
 import com.android.systemui.R;
 import com.android.systemui.qs.QSDetailItemsList;
 import com.android.systemui.qs.QSTile;
@@ -122,7 +123,8 @@ public class NavigationBarTile extends QSTile<NavigationBarTile.NavbarState> {
 
     private boolean navbarEnabled() {
         return Settings.Secure.getInt(mContext.getContentResolver(),
-                Settings.Secure.NAVIGATION_BAR_VISIBLE, 0) == 1;
+            Settings.Secure.NAVIGATION_BAR_VISIBLE,
+            DUActionUtils.hasNavbarByDefault(mContext) ? 1 : 0) == 1;
     }
 
     @Override
@@ -169,12 +171,17 @@ public class NavigationBarTile extends QSTile<NavigationBarTile.NavbarState> {
                 state.icon = ResourceIcon.get(R.drawable.ic_qs_smartbar);
                 state.label = mContext.getString(R.string.quick_settings_smartbar);
             } else if (navMode == 1){
-                state.icon = ResourceIcon.get(R.drawable.ic_qs_fling);
+                state.icon = ResourceIcon.get(R.drawable.ic_qs_fling_alpha);
                 state.label = mContext.getString(R.string.quick_settings_fling);
             }
         } else {
-            state.icon = ResourceIcon.get(R.drawable.ic_qs_smartbar_off);
-            state.label = mContext.getString(R.string.quick_settings_smartbar_off);
+            if (navMode == 0) {
+                state.icon = ResourceIcon.get(R.drawable.ic_qs_smartbar_off);
+                state.label = mContext.getString(R.string.quick_settings_smartbar_off);
+            } else if (navMode == 1){
+                state.icon = ResourceIcon.get(R.drawable.ic_qs_fling_alpha_off);
+                state.label = mContext.getString(R.string.quick_settings_fling_off);
+            }
         }
         state.visible = true;
     }
