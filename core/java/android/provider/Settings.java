@@ -3392,11 +3392,23 @@ public final class Settings {
             }
         };
 
+       /**
+         * Whether to display dashboard dividers
+         * @hide
+         */
+        public static final String DASHBOARD_TILEVIEW_DIVIDERS = "dashboard_tileview_dividers";
+
         /**
          * Change the number of columns displayed in the Settings dashboard
          * @hide
          */
         public static final String DASHBOARD_COLUMNS = "dashboard_columns";
+
+        /**
+         * Whether to display dashboard tiles in a double line layout
+         * @hide
+         */
+        public static final String DASHBOARD_TILEVIEW_DOUBLE_LINES = "dashboard_tileview_double_lines";
 
         /**
          * Whether to show the weather info on the lock screen
@@ -3415,12 +3427,6 @@ public final class Settings {
          * @hide
          */
         public static final String LOCK_SCREEN_SHOW_WEATHER_TIMESTAMP = "lock_screen_show_weather_timestamp";
-
-        /**
-         * Whether to display dashboard tiles in a double line layout
-         * @hide
-         */
-        public static final String DASHBOARD_TILEVIEW_DOUBLE_LINES = "dashboard_tileview_double_lines";
 
         /**
          * Weather condition icon on the lock screen
