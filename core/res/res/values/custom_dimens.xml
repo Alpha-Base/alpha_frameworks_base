@@ -27,4 +27,10 @@
     <!-- EdgeGesture service: Thickness of the active trigger fields around the screen border -->
     <dimen name="edge_gesture_trigger_thickness">12dp</dimen>
 
+    <!-- Boot dexopt layout -->
+    <dimen name="dexopt_icon_margin">4dp</dimen>
+    <dimen name="dexopt_icon_size">40dp</dimen>
+    <dimen name="dexopt_logo_size">200dp</dimen>
+    <dimen name="dexopt_margin">10dp</dimen>
+
 </resources>
